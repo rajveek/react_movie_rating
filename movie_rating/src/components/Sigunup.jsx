@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { signupapicall } from "./apicalls";
+import { useNavigate } from 'react-router-dom';
+import {  NavLink } from "react-router-dom";
 
 export default function Signup() {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,11 +14,20 @@ export default function Signup() {
   const [ageError, setAgeError] = useState(false);
   const [successMessage, setSuccessMessage] = useState(false);
 
-  const signupMutate = useMutation(signupapicall);
+  const signupMutate= useMutation(signupapicall,{
+    useErrorBoundary:true, 
+    staleTime:10000*60*60,
+    onSuccess: (data,variable) => {
+     //navigate("/login");
+      
+    }
+  });
+
+
 
   function validateForm(e) {
     e.preventDefault();
-    if (age < 18) {
+    if (age < 10) {
       setAgeError(true);
     } else {
       setAgeError(false);
@@ -42,6 +54,7 @@ export default function Signup() {
   }
   return (
     <div className="container text-center">
+    <h1>Movista</h1>
     <div><br></br></div>
       <h3>Signup</h3>
       <br></br>
@@ -107,9 +120,14 @@ export default function Signup() {
        
         <div className="col-12">
           <button className="btn btn-primary" type="submit">
-            Done signup
+            Done 
           </button>
         </div>
+        <p className="small fw-bold mt-2 pt-1 mb-0">Already have an account? 
+        <NavLink to="/login" className="link-info">Login</NavLink>
+         {/* <a href="/signup" onClick={gotosinup}
+                className="link-danger">Signup</a> */}
+                </p>
       </form>
       {successMessage && (
         <div>
@@ -117,6 +135,7 @@ export default function Signup() {
           <span className="alert alert-success">form submitted !</span>
         </div>
       )}
+     
     </div>
   );
 }

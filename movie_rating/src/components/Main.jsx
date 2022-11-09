@@ -1,76 +1,66 @@
-import { Routes, Route, NavLink ,Navigate} from "react-router-dom";
-import Nav from 'react-bootstrap/Nav';
-import Home from "./Home";
-import Login from "./Login";
-import Signup from "./Sigunup";
+import {  NavLink } from "react-router-dom";
+import Nav from "react-bootstrap/Nav";
 import Gravatar from "react-gravatar";
-//import createResource from "../createResource";
-import axios from "axios";
-import Navbar from "react-bootstrap/Navbar"
-import Container from 'react-bootstrap/Container';
-import { useState } from "react";
-import Dashboard from "./dashboard";
-import { getcurrentuser } from "./apicalls";
-import { useQuery } from "@tanstack/react-query";
-//const userResource = createResource(axios.get("http://localhost:3000/user").then((res) => res.data));
+import Navbar from "react-bootstrap/Navbar";
+import Container from "react-bootstrap/Container";
+import { useNavigate } from 'react-router-dom';
 
-export default function Main() {
- const username="a"
-  // const { data: username} = useQuery(
-  //   ["username"],
-  //   () => {
-  //     return axios.get("http://34.208.44.89:3006/user/currentuser").then((res) => console.log(res.data));
-  //   },
-  //   { useErrorBoundary: true }
-  // );
-  
-  
+export default function Main({user,oldname,oldemail}) {
+
+  const navigate = useNavigate();
+
+  function logout(){
+  //  navigate("/");
+  //  window.location.reload(true)
+  }
+  //console.log("user",user)
+
+
   return (
     <div className=" text-center">
       <Navbar className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <Container>
-      
-      <Navbar.Brand href="/" > Movista</Navbar.Brand>
-      <Nav className="me-auto">
-            <NavLink end to="/" className="nav-link">
-                  Home
-                </NavLink>
-            <NavLink end to="/signup" className="nav-link">
-                  Signup
-                </NavLink>
-            <NavLink end to="/login" className="nav-link">
-                  login
-                </NavLink>
-                <NavLink end to="/dashboard" className="nav-link">
-                  Dashboard
-                </NavLink>
-          </Nav>
-        <br></br>
-       
-        
-          
+        <Container>
+          <Navbar.Brand href="/"> Movista</Navbar.Brand>
+          <Nav className="me-auto">
             
-            {/* <Nav className="justify-content-end">
-            <span  style={{ overflow: "hidden"  }} className=" bg-info rounded-circle">
-          <Gravatar
-            style={{ width: "4rem", height: "4rem" }}
-            title={currentUser.name}
-            email={currentUser.email}
-          />
-      
-        </span>
-        </Nav> */}
-        </Container> 
+            <NavLink end to="/dashboard" className="nav-link">
+              Dashboard
+            </NavLink>
+            <NavLink end to="/profile" className="nav-link">
+              Edit Profile
+            </NavLink>
+          </Nav>
+          <br></br>
+
+          {user ? (
+            <div
+              style={{ overflow: "hidden" }}
+              className="bg-info rounded-circle me-3"
+            >
+              <NavLink className="nav-link" to="/profile">
+                <Gravatar
+                  style={{ width: "2rem", height: "2rem" }}
+                  title={user ? oldname : null}
+                 email={user ? oldemail : null}
+                />
+              </NavLink>
+            </div>
+          ) : (
+            <div style={{ overflow: "hidden" }} className="me-3">
+              <button type="button" className="btn btn-outline-light">
+                <NavLink
+                  to="/login"
+                  style={{ color: "unset", textDecoration: "unset" }}
+                >
+                  Login
+                </NavLink>
+              </button>
+            </div>
+          )}
+          <button className="btn btn-outline-light" onClick={logout} >Logout</button>
+        </Container>
       </Navbar>
-      
-      <div>
-        <Routes>
-          <Route index element={<Home />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={username?<Dashboard/>:<Login />} />
-        </Routes>
-      </div>
+
     </div>
   );
 }

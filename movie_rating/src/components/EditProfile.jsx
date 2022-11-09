@@ -1,26 +1,43 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-//import { signupapicall } from "./apicalls";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getcurrentuser } from "./apicalls";
+import { editprofile } from "./apicalls";
+import Main from "./Main";
+let oldname,oldemail,oldage=null
 
-export default function Signup() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+export default function EditProfile() {
+  const {data:user} =useQuery(['user-data'],getcurrentuser)
+  console.log(user.data)
+
+  oldname=user?.data.name
+  oldage=user?.data.age
+  oldemail=user?.data.email
+
+  const [name, setName] = useState(oldname);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
-  const [age, setAge] = useState(0);
-  const [ageError, setAgeError] = useState(false);
+  const [age, setAge] = useState(parseInt(oldage));
   const [successMessage, setSuccessMessage] = useState(false);
+  const [ageError, setAgeError] = useState(false);
 
-  //const signupMutate = useMutation(signupapicall);
+  
+  const editMutate= useMutation(editprofile,{
+    useErrorBoundary:true, 
+    staleTime:10000*60*60,
+    onSuccess: (data,variable) => {
+      console.log(data,variable)
+      
+    }
+  });
 
   function validateForm(e) {
     e.preventDefault();
-    if (age < 18) {
+    if (age < 10) {
       setAgeError(true);
     } else {
       setAgeError(false);
     }
-    
+   
     if (password.length < 8) {
       setPasswordError(true);
     } else {
@@ -28,24 +45,26 @@ export default function Signup() {
     }
     
     
-    
-   
-    if(passwordError===false && ageError===false )
+    if(passwordError===false  )
     {
+    
       console.log("here")
       setSuccessMessage(!successMessage);
-      const array=[email,name,password,age]
+      const array=[name,password,age]
       console.log(array)
-      //signupMutate.mutate(array)
-    
+      editMutate.mutate(array)
     }
+    
   }
   return (
+    <div><Main user={user}  oldname={oldname} oldemail={oldemail}  />
     <div className="container text-center">
+    
     <div><br></br></div>
       <h3>Edit Profile</h3>
       <br></br>
       <form onSubmit={validateForm}>
+      
       <div className="mb-3">
           <input
           required
@@ -88,25 +107,27 @@ export default function Signup() {
             <div>
               <br></br>
               <span className="alert alert-danger">
-                age must be more than 18
+                age must be more than 10
               </span>
             </div>
           )}
+         
         </div>
         
        
         <div className="col-12">
           <button className="btn btn-primary" type="submit">
-            Done signup
+            Save changes
           </button>
         </div>
       </form>
       {successMessage && (
         <div>
           <br></br>
-          <span className="alert alert-success">form submitted !</span>
+          <span className="alert alert-success">updated succesfully</span>
         </div>
       )}
+    </div>
     </div>
   );
 }
