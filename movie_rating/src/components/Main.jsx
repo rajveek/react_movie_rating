@@ -18,7 +18,7 @@ export default function Main({user,oldname,oldemail}) {
 
   return (
     <div className=" text-center">
-      <Navbar className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <Navbar className="navbar navbar-expand-lg navbar-dark bg-dark" >
         <Container>
           <Navbar.Brand href="/"> Movista</Navbar.Brand>
           <Nav className="me-auto">

@@ -1,9 +1,12 @@
-import { useState } from "react";
+import "./styles.css";
+import { useContext, useState } from "react";
 import { loginapicall } from "./apicalls";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from 'react-router-dom';
 import { getcurrentuser } from "./apicalls";
 import { Link } from "react-router-dom";
+import { UserContext } from "./UserContext";
+
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,15 +15,17 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [successMessage, setSuccessMessage] = useState(false);
+  const [loggedinUser,setUser] =useContext(UserContext)
   //const [,setusername]=useState("")
   let user=""
 
   const loginMutate= useMutation(loginapicall,{
  
   onSuccess: (data,variable) => {
-    //console.log("data",data.token)
-    //console.log("variable",variable[0])
+    console.log("data",data)
+  console.log("variable",variable)
     //queryClient.setQueryData(['a'],setusername(variable[0]))
+    setUser(variable)
     navigate("/dashboard");
     // getcurrentuser().then((res) => user=res.data);
     // console.log(user)
@@ -52,8 +57,10 @@ export default function Login() {
   return (
     
     
-    <div className="container text-center d-flex flex-column">
+    <div className=" card forms container text-center d-flex flex-column"
+    >
     <h1>Movista</h1>
+    <hr class="solid"></hr>
    
 {/* <ul classNameName="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
   <li classNameName="nav-item" role="presentation">
@@ -105,22 +112,22 @@ export default function Login() {
         
         
         <div className="col-12">
-          <button className="btn btn-primary" type="submit">
+          <button className="btn btn-light" type="submit">
             Done
           </button>
         </div>
 
         <p className="small fw-bold mt-2 pt-1 mb-0">Don't have an account? 
-        <Link to="/" className="link-info">Sign up</Link>
+        <Link to="/" className="link-light">Sign up</Link>
                 </p>
       </form>
-      {successMessage && (
+      {/* {successMessage && (
         <div>
           <br></br>
           <span className="alert alert-success">form submitted !</span>
         </div>
 
-      )}
+      )} */}
       <div>
       </div>
     </div>

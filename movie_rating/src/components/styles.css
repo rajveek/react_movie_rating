@@ -5,3 +5,10 @@
     /* object-fit: cover; */
 }
 
+.forms{
+    margin-top: 10%;
+    width: 30% !important;
+    background-color: rgb(177, 182, 207) !important;
+    height: 30em !important;
+}
+

@@ -1,3 +1,4 @@
+import "./styles.css";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { signupapicall } from "./apicalls";
@@ -53,8 +54,9 @@ export default function Signup() {
     }
   }
   return (
-    <div className="container text-center">
+    <div className="container text-center card forms">
     <h1>Movista</h1>
+    <hr class="solid"></hr>
     <div><br></br></div>
       <h3>Signup</h3>
       <br></br>
@@ -119,22 +121,22 @@ export default function Signup() {
         
        
         <div className="col-12">
-          <button className="btn btn-primary" type="submit">
+          <button className="btn btn-light" type="submit">
             Done 
           </button>
         </div>
         <p className="small fw-bold mt-2 pt-1 mb-0">Already have an account? 
-        <NavLink to="/login" className="link-info">Login</NavLink>
+        <NavLink to="/login" className="link-light">Login</NavLink>
          {/* <a href="/signup" onClick={gotosinup}
                 className="link-danger">Signup</a> */}
                 </p>
       </form>
-      {successMessage && (
+      {/* {successMessage && (
         <div>
           <br></br>
           <span className="alert alert-success">form submitted !</span>
         </div>
-      )}
+      )} */}
      
     </div>
   );

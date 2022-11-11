@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getcurrentuser } from "./apicalls";
 import { editprofile } from "./apicalls";
 import Main from "./Main";
+import { UserContext } from "./UserContext";
 let oldname,oldemail,oldage=null
 
 export default function EditProfile() {
-  const {data:user} =useQuery(['user-data'],getcurrentuser)
+  const {data:user} =useQuery(['user-data'],getcurrentuser,{
+    onSuccess:(data)=>{
+      setUser(user);
+      console.log("user")
+    }
+  })
   console.log(user.data)
 
   oldname=user?.data.name
@@ -19,6 +25,7 @@ export default function EditProfile() {
   const [age, setAge] = useState(parseInt(oldage));
   const [successMessage, setSuccessMessage] = useState(false);
   const [ageError, setAgeError] = useState(false);
+  const [loggedinUser,setUser]=useContext(UserContext)
 
   
   const editMutate= useMutation(editprofile,{

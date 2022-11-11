@@ -1,8 +1,10 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useContext } from "react";
 import { useState } from "react";
 import { getcurrentuser, getmoviescall } from "./apicalls";
 import Main from "./Main";
 import MovieResult from "./MovieData";
+import { UserContext } from "./UserContext";
 
 export default function Dashboard() {
 
@@ -12,12 +14,19 @@ export default function Dashboard() {
   const [sortorder, setsortorder] = useState("asc");
   const [searchText, setsearchtxt] = useState("");
   const [page, setpage] = useState(1);
+  const [loggedinUser,setUser]= useContext(UserContext);
 
 
   let oldname, oldemail = null;
-  const { data: user } = useQuery(["user-data"], getcurrentuser);
+  const { data: user } = useQuery(["user-data"], getcurrentuser,{
+    onSuccess:(data)=>{
+      setUser(user);
+      console.log("user")
+    }
+  });
   const { data: moviesdata } = useQuery(["m"], getmoviescall, {
     staleTime: Infinity,
+    suspense:true
   });
 
   oldname = user?.data.name;
