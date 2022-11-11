@@ -18,7 +18,7 @@ export default function Signup() {
     useErrorBoundary:true, 
     staleTime:10000*60*60,
     onSuccess: (data,variable) => {
-     //navigate("/login");
+     navigate("/login");
       
     }
   });

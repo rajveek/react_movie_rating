@@ -1,6 +1,6 @@
 
 import './App.css';
-//import { ErrorBoundary } from "react-error-boundary"
+import { ErrorBoundary } from "react-error-boundary"
 import Login from './components/Login';
 import Signup from './components/Sigunup';
 import { Routes, Route } from "react-router-dom";
@@ -10,7 +10,7 @@ import EditProfile from './components/EditProfile';
 function App() {
   //const navigate = useNavigate();
   return (
-    // <ErrorBoundary fallback={<Login/>}>
+    //  <ErrorBoundary fallback={<Login/>}>
     <div>
     <div>
         <Routes>
@@ -22,7 +22,7 @@ function App() {
         </Routes>
     </div>
     </div>
-    // </ErrorBoundary>
+    //  </ErrorBoundary>
   );
 }
 

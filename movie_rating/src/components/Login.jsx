@@ -22,8 +22,8 @@ export default function Login() {
     //console.log("variable",variable[0])
     //queryClient.setQueryData(['a'],setusername(variable[0]))
     navigate("/dashboard");
-    getcurrentuser().then((res) => user=res.data);
-    console.log(user)
+    // getcurrentuser().then((res) => user=res.data);
+    // console.log(user)
     //setInputValue("")
   },
  

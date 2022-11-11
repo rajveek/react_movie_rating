@@ -2,7 +2,8 @@ import axios from "axios";
 
 const newAxios = axios.create({
   //baseURL : "http://34.208.44.89:3006"
-  baseURL: process.env.REACT_APP_API_URL
+  baseURL: process.env.REACT_APP_API_URL,
+  withCredentials:false
  })
 
 
@@ -16,7 +17,7 @@ export const signupapicall = (array) => {
 };
 
 export const loginapicall = (array) => {
-  newAxios
+  return newAxios
     .post("/auth/login", {
       username: array[0],
       password: array[1],

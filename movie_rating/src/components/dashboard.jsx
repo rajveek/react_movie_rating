@@ -1,143 +1,59 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {  useState } from "react";
+import { useState } from "react";
 import { getcurrentuser, getmoviescall } from "./apicalls";
-//import { moviesearch } from './apicalls';
 import Main from "./Main";
 import MovieResult from "./MovieData";
+
 export default function Dashboard() {
+
   const queryClient = useQueryClient();
   const [limit, setlimit] = useState(0);
   const [sortby, setsortby] = useState("genres");
   const [sortorder, setsortorder] = useState("asc");
   const [searchText, setsearchtxt] = useState("");
-  const [page,setpage]=useState(1)
+  const [page, setpage] = useState(1);
 
 
-  
-  // User is currently on this page
-  // const [currentPage, setCurrentPage] = useState(1);
-  // // No of Records to be displayed on each page
-  // const [recordsPerPage] = useState(10);
-  // const indexOfLastRecord = currentPage * recordsPerPage;
-  // const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  // // Records to be displayed on the current page
-  // const currentRecords = data.slice(indexOfFirstRecord,
-  //   indexOfLastRecord);
-  //   const nPages = Math.ceil(data.length / recordsPerPage)
-  let oldname,
-    oldemail = null;
-  //let moviesd = null;
+  let oldname, oldemail = null;
   const { data: user } = useQuery(["user-data"], getcurrentuser);
-  const { data: moviesdata } = useQuery(["m"], getmoviescall,{staleTime:Infinity});
-  // useEffect(()=>{
-  //     console.log('data changes')
-  //   },[moviesdata])
-  // const { data: res } = useQuery(
-  //   ["movies", currentPage],
-  //   getmoviescall({ limit, sortby, sortorder, searchText, skipData }),
-  //   {
-  //     keepPreviousData: true,
-  //     notifyOnChangeProps: ["data"],
-  //     select: (res) => {
-  //       const totaldoc = Number.parseInt(res.headers.get('X-Total-Count'),4);
-  //       return{
-  //         data:res.data,
-  //         TotalPages:Math.ceil(totaldoc/4)
-  //       }
-  //     },
-  //   }
-  // );
-  // useEffect(()=>{
-  //   console.log('data changes')
-  // },[res])
-
-  //console.log(user)
-  //  const {data:movies}=getmoviescall({limit, sortby,sortorder, searchtxt,skip})
-
-  //  console.log("moviesdata :",movies)
-  //const {data:movies}=useQuery(['movie'],getmoviescall({limit, sortby,sortorder, searchtxt,skip}))
+  const { data: moviesdata } = useQuery(["m"], getmoviescall, {
+    staleTime: Infinity,
+  });
 
   oldname = user?.data.name;
   oldemail = user?.data.email;
 
-  //  const {data:moviedata}=useQuery(['movie-data'],moviesearch({
-  //   sort: "genres",
-  //   sortOrder: "asc",
-  // }),{staleTime:1000*60*60})
-  // console.log(moviedata)
-  //moviesearch({limit, sortby,sortorder, searchtxt,skip}).then(res=>console.log(res.data));
-  //getmoviescall({limit,sortData,sortOrder,searchText,skipData}).then(res => console.log(res.data))
-  function validateForm(e) {
+   function searchMovieData(e, page, flag) {
     e.preventDefault();
-    console.log(sortby);
-    console.log(sortorder);
-    //setskip((page-1)*limit)
-    console.log((page-1)*limit)
+    // console.log("flag :", flag);
+    // console.log((page - 1) * limit);
     const movies = getmoviescall({
       limit,
       sortby,
       sortorder,
       searchText,
-      skipData:(page-1)*limit,
+      skipData: (page - 1) * limit,
     });
-    ;
     movies.then((res) => {
-      console.log("Response is ",res)
       queryClient.setQueryData(["m"], res);
+      setpage(page);
     });
   }
 
-  function nextpage(e){
-    e.preventDefault()
-    console.log(limit,page)
-    const movies = getmoviescall({
-      limit,
-      sortby,
-      sortorder,
-      searchText,
-      skipData:page*limit,
-    });
-    ;
-    movies.then((res) => {
-      console.log("Response is ",res)
-      queryClient.setQueryData(["m"], res);
-    });
-  
-
-  }
-  function previouspage(){
-    console.log(limit,page)
-    const movies = getmoviescall({
-      limit,
-      sortby,
-      sortorder,
-      searchText,
-      skipData:(page-1)*limit,
-    });
-    ;
-    movies.then((res) => {
-      console.log("Response is ",res)
-      queryClient.setQueryData(["m"], res);
-    });
-  
-
-  }
-  console.log("moviesdata :", moviesdata);
-  //console.log("moviesdata.data :", moviesdata.data);
-  //console.log("moviesd type:", (moviesdata.data == undefined));
   return (
     <div>
-      {/* {user=!null && user.status==200? */}
+     
       <Main user={user} oldname={oldname} oldemail={oldemail} />
-      {/* } */}
       <div className="container text-center">
         <br></br>
-
         <h3>Search for your movie</h3>
-
         <br></br>
-        <form id="searchBar" className="d-flex px-5" onSubmit={validateForm}>
-        <div className="d-flex flex-column me-3">
+        <form
+          id="searchBar"
+          className="d-flex px-5"
+          onSubmit={(e) => searchMovieData(e, page, 0)}
+        >
+          <div className="d-flex flex-column me-3">
             <input
               placeholder="enter search text"
               type="text"
@@ -145,7 +61,7 @@ export default function Dashboard() {
               onChange={(e) => setsearchtxt(e.target.value)}
             />
           </div>
-         
+
           <div className="d-flex flex-column me-3">
             <div className="btn-group">
               {/* sort by : */}
@@ -205,7 +121,7 @@ export default function Dashboard() {
           </div>
         </form>
         <h3>Movie Results</h3>
-        {moviesdata != null ? ( 
+        {moviesdata != null ? (
           <div className="row">
             {moviesdata.data.map((item) => {
               return (
@@ -220,18 +136,28 @@ export default function Dashboard() {
             })}
           </div>
         ) : (
-          <h4>no data</h4>
+          <h4>No data</h4>
         )}
 
         <nav aria-label="Page navigation example">
           <ul className="pagination justify-content-center">
             <li className="page-item">
-              <a className="page-link" href="/" aria-label="Previous" onClick={previouspage}>
+              <a
+                className="page-link"
+                href="/"
+                aria-label="Previous"
+                onClick={(e) => searchMovieData(e, page - 1, 1)}
+              >
                 <span aria-hidden="true">&laquo;</span>
               </a>
-            </li> 
+            </li>
             <li className="page-item">
-              <a className="page-link" href="/" aria-label="Next" onClick={nextpage}>
+              <a
+                className="page-link"
+                href="/"
+                aria-label="Next"
+                onClick={(e) => searchMovieData(e, page + 1, 2)}
+              >
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>

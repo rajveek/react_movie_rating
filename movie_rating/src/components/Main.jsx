@@ -10,8 +10,8 @@ export default function Main({user,oldname,oldemail}) {
   const navigate = useNavigate();
 
   function logout(){
-  //  navigate("/");
-  //  window.location.reload(true)
+   navigate("/");
+   window.location.reload(true)
   }
   //console.log("user",user)
 
