@@ -3,7 +3,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import Login from "./components/Login";
 import Signup from "./components/Sigunup";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Dashboard from "./components/dashboard";
+import MovieBoard from "./components/Movieboard";
 import EditProfile from "./components/EditProfile";
 import { UserContext } from "./components/UserContext";
 import { useState, Suspense } from "react";
@@ -26,15 +26,17 @@ function App() {
               
                 <Route
                   path="/profile"
-                  element={
-                    loggedinUser ? <EditProfile /> : <Navigate to="/login" />
-                  }
+                  element={<EditProfile/>}
+                  // element={
+                  //   loggedinUser ? <EditProfile /> : <Navigate to="/login" />
+                  // }
                 />
                 <Route
                   path="/dashboard"
-                  // element={<Dashboard/>}
+                  //element={<MovieBoard/>}
                   element={
-                    loggedinUser ? <Dashboard /> : <Navigate to="/login" />
+                    loggedinUser ? <MovieBoard/> : <Navigate to="/login" />
+
                   }
                 />
               

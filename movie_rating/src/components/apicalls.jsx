@@ -2,8 +2,7 @@ import axios from "axios";
 
 const newAxios = axios.create({
   //baseURL : "http://34.208.44.89:3006"
-  baseURL: process.env.REACT_APP_API_URL,
-  withCredentials:false
+  baseURL: process.env.REACT_APP_API_URL
  })
 
 
@@ -25,6 +24,7 @@ export const loginapicall = (array) => {
     .then((res) => {
       console.log(res.data.token);
       token = res.data.token;
+      return res.data
     });
 };
 
@@ -35,46 +35,27 @@ export const getcurrentuser = () =>
 
 export const editprofile = (array) => {
   const data = { name: array[0], password: array[1], age: parseInt(array[2]) };
-  newAxios.put("/user",data, {
+  return newAxios.put("/user",data, {
     headers: { Authorization: `Bearer ${token}` },
-  });
+  }).then((res)=>res.data);
 };
 
-// export const moviesearch = ({
-//   limit,
-//   sort = "genres",
-//   sortOrder = "asc",
-//   searchText = "",
-//   skip,
-// }) => {
-//   const params = { sort: sort, sortOrder: sortOrder };
-//   if (limit) params["limit"] = limit;
-//   if (searchText) params["searchText"] = searchText;
-//   if (skip) params["skip"] = skip;
-//   newAxios
-//     .get("/movies", {
-//       params,
-//       headers: { Authorization: `Bearer ${token}` },
-//     })
-// };
-
 export const getmoviescall = ({
-  limit,
-  sortData = "genres",
-  sortOrder = "asc",
-  searchText = "",
-  skipData,
-  }) => {
-  const params = { sort: sortData, sortOrder: sortOrder };
-  if (limit) params["limit"] = limit;
-  if (searchText) params["searchText"] = searchText;
-  if (skipData) params["skip"] = skipData;
+  queryKey: [
+    ,
+    { limit, sortData = "genres", sortOrder = "asc", searchText = "", skipData },
+  ],
+}) => {
   return newAxios
-  .get("/movies", {
-  headers: { Authorization: `Bearer ${token}` },
-  params,
-  })
-  };
+    .get("/movies", {
+      headers: { Authorization: `Bearer ${token}` },
+      params:{limit : limit ?? 12,
+      sort: sortData || 'genres',
+      sortOrder: sortOrder || 'asc',
+      searchText: searchText || undefined,
+      skip:skipData },
+    })
+};
 
 let token = null;
 const instance = newAxios.create((config) => ({

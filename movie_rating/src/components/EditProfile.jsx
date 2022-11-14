@@ -7,17 +7,19 @@ import { UserContext } from "./UserContext";
 let oldname,oldemail,oldage=null
 
 export default function EditProfile() {
-  const {data:user} =useQuery(['user-data'],getcurrentuser,{
-    onSuccess:(data)=>{
-      setUser(user);
-      console.log("user")
-    }
-  })
-  console.log(user.data)
+  const [{user,token},setUser]= useContext(UserContext);
 
-  oldname=user?.data.name
-  oldage=user?.data.age
-  oldemail=user?.data.email
+  // const {data:user} =useQuery(['user-data'],getcurrentuser,{
+  //   onSuccess:(data)=>{
+  //     setUser(user);
+  //     console.log("user")
+  //   }
+  // })
+  // console.log(user.data)
+
+  oldname=user.name
+  oldage=user.age
+  oldemail=user.email
 
   const [name, setName] = useState(oldname);
   const [password, setPassword] = useState("");
@@ -25,7 +27,7 @@ export default function EditProfile() {
   const [age, setAge] = useState(parseInt(oldage));
   const [successMessage, setSuccessMessage] = useState(false);
   const [ageError, setAgeError] = useState(false);
-  const [loggedinUser,setUser]=useContext(UserContext)
+  //const [loggedinUser,setUser]=useContext(UserContext)
 
   
   const editMutate= useMutation(editprofile,{
@@ -33,7 +35,9 @@ export default function EditProfile() {
     staleTime:10000*60*60,
     onSuccess: (data,variable) => {
       console.log(data,variable)
-      
+      setUser({
+        token,user:data
+      })
     }
   });
 
@@ -55,7 +59,7 @@ export default function EditProfile() {
     if(passwordError===false  )
     {
     
-      console.log("here")
+      //console.log("here")
       setSuccessMessage(!successMessage);
       const array=[name,password,age]
       console.log(array)

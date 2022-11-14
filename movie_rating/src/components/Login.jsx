@@ -25,8 +25,10 @@ export default function Login() {
     console.log("data",data)
   console.log("variable",variable)
     //queryClient.setQueryData(['a'],setusername(variable[0]))
-    setUser(variable)
-    navigate("/dashboard");
+    setUser(data)
+    //setTimeout(() => {
+      navigate("/dashboard");
+    //}, 100); 
     // getcurrentuser().then((res) => user=res.data);
     // console.log(user)
     //setInputValue("")
@@ -60,7 +62,8 @@ export default function Login() {
     <div className=" card forms container text-center d-flex flex-column"
     >
     <h1>Movista</h1>
-    <hr class="solid"></hr>
+    <hr className="solid"></hr>
+
    
 {/* <ul classNameName="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
   <li classNameName="nav-item" role="presentation">

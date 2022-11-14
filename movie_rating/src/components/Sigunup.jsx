@@ -53,10 +53,11 @@ export default function Signup() {
     
     }
   }
+
   return (
     <div className="container text-center card forms">
     <h1>Movista</h1>
-    <hr class="solid"></hr>
+    <hr className="solid"></hr>
     <div><br></br></div>
       <h3>Signup</h3>
       <br></br>

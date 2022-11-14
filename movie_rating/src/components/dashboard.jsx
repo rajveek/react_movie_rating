@@ -6,47 +6,50 @@ import Main from "./Main";
 import MovieResult from "./MovieData";
 import { UserContext } from "./UserContext";
 
-export default function Dashboard() {
+export default function Dashboard({onChange,moviesdata}) {
+  
 
   const queryClient = useQueryClient();
-  const [limit, setlimit] = useState(0);
+  const [limit, setlimit] = useState(4);
   const [sortby, setsortby] = useState("genres");
   const [sortorder, setsortorder] = useState("asc");
   const [searchText, setsearchtxt] = useState("");
   const [page, setpage] = useState(1);
-  const [loggedinUser,setUser]= useContext(UserContext);
+  const [{user},setUser]= useContext(UserContext);
 
 
-  let oldname, oldemail = null;
-  const { data: user } = useQuery(["user-data"], getcurrentuser,{
-    onSuccess:(data)=>{
-      setUser(user);
-      console.log("user")
-    }
-  });
-  const { data: moviesdata } = useQuery(["m"], getmoviescall, {
-    staleTime: Infinity,
-    suspense:true
-  });
+   let oldname, oldemail = null;
+  // const { data: user } = useQuery(["user-data"], getcurrentuser,{
+  //   onSuccess:(data)=>{
+  //     setUser(user);
+  //     console.log("user")
+  //   }
+  // });
+  // const { data: moviesdata } = useQuery(["m"], getmoviescall, {
+  //   staleTime: Infinity,
+  //   suspense:true
+  // });
 
-  oldname = user?.data.name;
-  oldemail = user?.data.email;
+  oldname = user.name;
+  oldemail = user.email;
 
    function searchMovieData(e, page, flag) {
     e.preventDefault();
+    onChange({ limit, sortby, sortorder, searchText, skipData:(page-1)*limit });
+   setpage(page)
     // console.log("flag :", flag);
     // console.log((page - 1) * limit);
-    const movies = getmoviescall({
-      limit,
-      sortby,
-      sortorder,
-      searchText,
-      skipData: (page - 1) * limit,
-    });
-    movies.then((res) => {
-      queryClient.setQueryData(["m"], res);
-      setpage(page);
-    });
+    // const movies = getmoviescall({
+    //   limit,
+    //   sortby,
+    //   sortorder,
+    //   searchText,
+    //   skipData: (page - 1) * limit,
+    // });
+    // movies.then((res) => {
+    //   queryClient.setQueryData(["m"], res);
+    //   setpage(page);
+    // });
   }
 
   return (
